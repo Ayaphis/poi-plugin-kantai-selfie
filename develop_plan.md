@@ -7,7 +7,7 @@
     -  [ ] Listen drop and build new ship
     -  [ ] Listen Get Message voice
   - [ ] Feature
-    - [ ] Capture and save file
+    - [x] Capture and save file
     - [ ] Non-fleet-existed ship detect
   - [ ] Settings
     - [ ] Burst setting
