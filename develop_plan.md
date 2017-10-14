@@ -8,7 +8,7 @@
     -  [x] Listen Get Message voice
   - [ ] Feature
     - [x] Capture and save file
-    - [ ] Non-fleet-existed ship detect
+    - [x] Non-fleet-existed ship detect
   - [ ] Settings
     - [ ] Burst setting
     - [ ] Custom file naming
