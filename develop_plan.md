@@ -3,9 +3,9 @@
 ### Todo List
 
 - [ ] version 1.0
-  - [ ] Game response
-    -  [ ] Listen drop and build new ship
-    -  [ ] Listen Get Message voice
+  - [x] Game response
+    -  [x] Listen drop and build new ship
+    -  [x] Listen Get Message voice
   - [ ] Feature
     - [x] Capture and save file
     - [ ] Non-fleet-existed ship detect

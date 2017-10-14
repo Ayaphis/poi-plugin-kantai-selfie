@@ -2,6 +2,9 @@ import React, { Component } from 'react'
 import { Button, Panel } from 'react-bootstrap'
 import FileWriter from 'views/utils/file-writer' // import poi's writer
 const { APPDATA_PATH } = window
+import { Listener } from './listener'
+let listener
+
 
 export const reactClass = class CapturerUI extends Component {
     render() {
@@ -15,9 +18,18 @@ export const reactClass = class CapturerUI extends Component {
     }
 }
 
+export const
+    pluginDidLoad = (e) => {
+        listener = new Listener(handleCapture)
+        listener.start()
+    },
+    pluginWillUnload = (e) => {
+        listener.stop()
+    };
+
 // poi\views\components\info\control.es handleCapturePage
 import path from 'path-extra'
-function handleCapture() {
+function handleCapture(ship_id) {
     const bound = $('kan-game webview').getBoundingClientRect()
     const rect = {
         x: Math.ceil(bound.left),
@@ -28,13 +40,14 @@ function handleCapture() {
     const d = process.platform == 'darwin' ? path.join(remote.app.getPath('home'), 'Pictures', 'Poi') : path.join(APPDATA_PATH, 'screenshots')
     const screenshotPath = config.get('poi.screenshotPath', d)
     const usePNG = config.get('poi.screenshotFormat', 'png') === 'png'
+    const shipname = !isNaN(ship_id) ? $ships[ship_id].api_name : "test"
     remote.getGlobal("mainWindow").capturePage(rect, (image) => {
         try {
             const buf = usePNG ? image.toPNG() : image.toJPEG(80)
             const now = new Date()
             const date = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}T${now.getHours()}.${now.getMinutes()}.${now.getSeconds()}`
             //fs.ensureDirSync(screenshotPath)
-            const filename = path.join(screenshotPath, `${date}.${usePNG ? 'png' : 'jpg'}`)
+            const filename = path.join(screenshotPath, `${date}_${shipname}.${usePNG ? 'png' : 'jpg'}`)
             const fw = new FileWriter()
             fw.write(filename, buf, function (err) {
                 if (err) {
