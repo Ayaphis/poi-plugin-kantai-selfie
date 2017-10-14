@@ -1,7 +1,7 @@
 {
   "name": "poi-plugin-kantai-selfie",
   "version": "0.0.0",
-  "description": "A plugin capture screenshot automatically foe poi\u001b[D\u001b[D\u001b[D\u001b[r",
+  "description": "A plugin capture screenshot automatically for poi",
   "main": "index.es",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -10,10 +10,22 @@
     "type": "git",
     "url": "git+https://github.com/Ayaphis/poi-plugin-kantai-selfie.git"
   },
-  "author": "Ayaphis",
+  "author": {
+    "name": "Ayaphis",
+    "link": "https://github.com/Ayaphis"
+  },
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/Ayaphis/poi-plugin-kantai-selfie/issues"
   },
-  "homepage": "https://github.com/Ayaphis/poi-plugin-kantai-selfie#readme"
+  "homepage": "https://github.com/Ayaphis/poi-plugin-kantai-selfie#readme",
+  "poiPlugin":{
+    "title": "Kantai Selfie",
+    "description": "Capture screenshot automatically",
+    "icon": "fa/camera",
+    "priority": 30,
+    "apiVer": {
+      "7.10.0": "0.0.0"
+    }
+  }
 }
