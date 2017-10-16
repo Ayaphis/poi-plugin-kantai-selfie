@@ -12,7 +12,7 @@ import { handleCapture } from './lib/capture'
 let TypedShipList
 let listener
 let hopeShips = fleetAnalyse()
-let hopeCheck = config.get("plugIn.Selfie", false)
+let hopeCheck = config.get("plugIn.selfie.hope", false)
 // let costalCheck = true
 // const Coastal_Defense_Ship = [517, 518, 524, 525]
 
@@ -33,7 +33,7 @@ export const reactClass = class CapturerUI extends Component {
     // }
     hopeCheckChange = () => {
         hopeCheck = !this.state.hopeCheck
-        config.set("plugIn.Selfie", hopeCheck)
+        config.set("plugIn.selfie.hope", hopeCheck)
         this.setState({ hopeCheck: hopeCheck })
         //console.log("hope:", hopeCheck)
     }
@@ -45,7 +45,7 @@ export const reactClass = class CapturerUI extends Component {
     }
     handleCap = () => {
         this.setState({ hopelist: hopeShips })
-        console.log("cap! ", hopeShips)
+        //console.log("cap! ", hopeShips)
     }
     // expendCoastal = () => {
     //     let x = !this.state.costalExpend
@@ -153,7 +153,7 @@ function fleetAnalyse() {
             protoship[after] = index
         }
     }
-    console.log(TypedShipList)
+    //console.log(TypedShipList)
     //console.log(protoship)
 
     const unmet = {}
@@ -176,7 +176,7 @@ const MiniList = class extends React.Component {
     render() {
         let ret = []
         for (let id of this.props.list) {
-            ret.push(<Label bsStyle={this.props.light ? "success" : "default"}
+            ret.push(" ", <Label bsStyle={this.props.light ? "success" : "default"}
                 key={id}> {$ships[id].api_name} </Label>)
         }
         return (
