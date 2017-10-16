@@ -1,6 +1,6 @@
 {
   "name": "poi-plugin-kantai-selfie",
-  "version": "0.4.1",
+  "version": "0.4.3",
   "description": "A plugin capture screenshot automatically for poi",
   "main": "index.es",
   "scripts": {
@@ -26,7 +26,7 @@
     "priority": 30,
     "i18nDir":"./assets/i18n",
     "apiVer": {
-      "6.99.0": "0.4.1"
+      "6.99.0": "0.4.3"
     }
   }
 }
