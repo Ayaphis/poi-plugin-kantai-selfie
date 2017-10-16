@@ -14,4 +14,5 @@
     - [ ] Custom file naming
     - [ ] Custom to-capture ships list
     - [ ] Custom non-capture ships list
+      - [x] Unmet ship capture
 
