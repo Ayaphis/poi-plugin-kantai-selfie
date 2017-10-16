@@ -24,6 +24,7 @@
     "description": "Capture screenshot automatically",
     "icon": "fa/camera",
     "priority": 30,
+    "i18nDir":"./assets/i18n",
     "apiVer": {
       "7.10.0": "1.0.0"
     }
