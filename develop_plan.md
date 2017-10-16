@@ -6,7 +6,7 @@
   - [x] Game response
     -  [x] Listen drop and build new ship
     -  [x] Listen Get Message voice
-  - [ ] Feature
+  - [x] Feature
     - [x] Capture and save file
     - [x] Non-fleet-existed ship detect
   - [ ] Settings

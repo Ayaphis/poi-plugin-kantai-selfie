@@ -6,9 +6,14 @@ export class Listener {
     toget = 0
     trigger = ""
     hopelist = []
-    constructor(callback) {
+    constructor(callback, inhope) {
         if (typeof callback === "function") {
             this.callback = callback
+        }
+        if (typeof inhope === "function") {
+            this.inhope = inhope
+        } else {
+            this.inhope = () => false
         }
     }
     handleGet = (e) => {
@@ -21,7 +26,6 @@ export class Listener {
                     // check if voice file is new ship's get voice
                     // console.log("trigger!")
                     this.callback(this.toget)
-                    this.hopelist = this.hopelist.filter(x=>x!=this.toget)
                     this.toget = 0
                 }
             }
@@ -31,13 +35,13 @@ export class Listener {
         const { body, path } = e.detail
         if (path === "/kcsapi/api_req_sortie/battleresult") {
             if (body.api_get_ship !== undefined
-                && this.hopelist.indexOf(body.api_get_ship.api_ship_id) !== -1) {
+                && this.inhope(body.api_get_ship.api_ship_id)) {
                 this.toget = body.api_get_ship.api_ship_id
                 this.trigger = "" + getVoice(this.toget)
                 //console.log(this.toget, this.trigger)
             }
         } else if (path === "/kcsapi/api_req_kousyou/getship") {
-            if (this.hopelist.indexOf(body.api_ship_id) !== -1) {
+            if (this.inhope(body.api_ship_id)) {
                 this.toget = body.api_ship_id
                 this.trigger = "" + getVoice(this.toget)
                 //console.log(this.toget, this.trigger)
