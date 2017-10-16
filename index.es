@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
-import { Button, Panel, Checkbox, Label } from 'react-bootstrap'
-//import FontAwesome from 'react-fontawesome'
-import FileWriter from 'views/utils/file-writer' // import poi's writer
+import { Button, Panel, Checkbox, Label, Col, Grid } from 'react-bootstrap'
 const { APPDATA_PATH } = window
-import { Listener } from './listener'
+
+import { Listener } from './lib/listener'
+import { handleCapture } from './lib/capture'
 let listener
 let hopeShips = fleetAnalyse()
 let hopeCheck = true
@@ -13,8 +13,11 @@ const Coastal_Defense_Ship = [517, 518, 524, 525]
 export const reactClass = class CapturerUI extends Component {
     state = {
         costalCheck: costalCheck,
+        costalExpend: false,
+        hopeExpend: false,
         hopeCheck: hopeCheck,
         hopelist: hopeShips,
+
     }
     // handleFleetAnalyse = () => {
     //     this.setState({ hopelist: fleetAnalyse() })
@@ -39,32 +42,57 @@ export const reactClass = class CapturerUI extends Component {
         this.setState({ hopelist: hopeShips })
         console.log("cap! ", hopeShips)
     }
-
+    expendCoastal = () => {
+        let x = !this.state.costalExpend
+        this.setState({ costalExpend: x })
+    }
+    expendHope = () => {
+        this.setState({ hopeExpend: !this.state.hopeExpend })
+    }
     render() {
         return (
             <div id="selfie-main" className="selfie-main-div">
                 <Panel collapsible header="Testing" id="selfie-test">
-                    <Button onClick={handleCapture}>Trigger A Capture</Button>
+                    <Button onClick={handleHope}>Trigger A Capture</Button>
                     {//<Button onClick={this.handleFleetAnalyse}>Generate hopelist</Button>
                     }
                 </Panel>
-                <Panel collapsible header="Capture when ship in below appears" id="selfie-caplist">
-                    <Checkbox checked={this.state.costalCheck} onChange={this.costalCheckChange} >Coastal Defense Ship</Checkbox>
-                    <MiniList
-                        open={this.state.costalCheck}
-                        list={Coastal_Defense_Ship}
-                    />
-                    <Checkbox checked={this.state.hopeCheck} onChange={this.hopeCheckChange} >Hope List</Checkbox>
-                    <MiniList
-                        open={this.state.hopeCheck}
-                        list={this.state.hopelist}
-                    />
+                <Panel collapsible header="Capture when ship in below appears"
+                    id="selfie-caplist">
+                    <Grid>
+                        <Col xs={8}>
+                            <Checkbox checked={this.state.costalCheck}
+                                onChange={this.costalCheckChange} >Coastal Defense Ship</Checkbox>
+                        </Col>
+                        <Col xs={4}>
+                            <Button onClick={this.expendCoastal}>Detail</Button>
+                        </Col>
+                        <Col xs={12}>
+                            <MiniList
+                                light={this.state.costalCheck}
+                                open={this.state.costalExpend}
+                                list={Coastal_Defense_Ship}
+                            />
+                        </Col>
+                        <Col xs={8}>
+                            <Checkbox checked={this.state.hopeCheck} onChange={this.hopeCheckChange} >Hope List</Checkbox>
+                        </Col>
+                        <Col xs={4}>
+                            <Button onClick={this.expendHope}>Detail</Button>
+                        </Col>
+                        <Col xs={12}>
+                            <MiniList
+                                light={this.state.hopeCheck}
+                                open={this.state.hopeExpend}
+                                list={this.state.hopelist}
+                            />
+                        </Col>
+                    </Grid>
                 </Panel>
             </div>
         )
     }
 }
-
 export const
     pluginDidLoad = (e) => {
         listener = new Listener(handleHope, inhope)
@@ -74,48 +102,12 @@ export const
         listener.stop()
     };
 
-// poi\views\components\info\control.es handleCapturePage
-import path from 'path-extra'
-function handleCapture(shipname) {
-    const bound = $('kan-game webview').getBoundingClientRect()
-    const rect = {
-        x: Math.ceil(bound.left),
-        y: Math.ceil(bound.top),
-        width: Math.floor(bound.width),
-        height: Math.floor(bound.height),
-    }
-    const d = process.platform == 'darwin' ? path.join(remote.app.getPath('home'), 'Pictures', 'Poi') : path.join(APPDATA_PATH, 'screenshots')
-    const screenshotPath = config.get('poi.screenshotPath', d)
-    const usePNG = config.get('poi.screenshotFormat', 'png') === 'png'
-    remote.getGlobal("mainWindow").capturePage(rect, (image) => {
-        try {
-            const buf = usePNG ? image.toPNG() : image.toJPEG(80)
-            const now = new Date()
-            const date = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}T${now.getHours()}.${now.getMinutes()}.${now.getSeconds()}`
-            //fs.ensureDirSync(screenshotPath)
-            const filename = path.join(screenshotPath, `${date}_${shipname}.${usePNG ? 'png' : 'jpg'}`)
-            const fw = new FileWriter()
-            fw.write(filename, buf, function (err) {
-                if (err) {
-                    throw err
-                }
-                //window.success(`${('screenshot saved to')} ${filename}`)
-            })
-        } catch (error) {
-            console.log(error)
-            //window.error(('Failed to save the screenshot'))
-        }
-    })
-}
-
 function handleHope(ship_id) {
     hopeShips = hopeShips.filter(x => x !== ship_id)
-    const shipname = !isNaN(ship_id) ? $ships[ship_id].api_name : "test"
+    const shipname = !isNaN(ship_id) ? $ships[ship_id].api_name : "TEST"
     handleCapture(shipname)
     dispatchEvent(new Event("selfie.cap"))
 }
-
-
 function fleetAnalyse() {
     const temps = {}
     for (const index in $ships) {
@@ -168,26 +160,23 @@ function fleetAnalyse() {
     //console.log(unmetShips.map(x => $ships[x].api_name))
     return unmetShips.map(x => parseInt(x))
 }
-
-
 const MiniList = class extends React.Component {
     render() {
         let ret = []
         for (let id of this.props.list) {
-            ret.push(<Label bsStyle={this.props.open ? "success" : "default"}
-                bsSize="large" key={id}> {$ships[id].api_name} </Label>)
+            ret.push(<Label bsStyle={this.props.light ? "success" : "default"}
+                key={id}> {$ships[id].api_name} </Label>)
         }
         return (
-            <div>
+            <Panel collapsible expanded={this.props.open}>
                 {ret}
-            </div>
+            </Panel>
         )
     }
 }
-
 function inhope(ship_id) {
     return (costalCheck && Coastal_Defense_Ship.indexOf(ship_id) !== -1)
         || (hopeCheck && hopeShips.indexOf(ship_id) !== -1)
-        //testing
-        //|| ($ships[ship_id].api_stype === 2)
+    //testing
+    //|| ($ships[ship_id].api_stype === 2)
 }

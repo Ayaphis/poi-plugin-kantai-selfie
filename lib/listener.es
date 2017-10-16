@@ -1,7 +1,6 @@
 function getVoice(ship_id) {
     return (ship_id + 7) * 17 * (2475) % 99173 + 100000
 }
-
 export class Listener {
     toget = 0
     trigger = ""
